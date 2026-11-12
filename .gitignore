@@ -1,0 +1,4 @@
+# Estado local do harness de loops
+loops/.active
+loops/*/.continuacao.json
+loops/*/*.tmp

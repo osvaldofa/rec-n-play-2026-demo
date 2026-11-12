@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "powershell": "pwsh -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .github/hooks/scripts/Write-HookEvent.ps1 -Evento sessionStart",
+        "bash": "pwsh -NoProfile -NonInteractive -File .github/hooks/scripts/Write-HookEvent.ps1 -Evento sessionStart",
+        "timeoutSec": 20
+      }
+    ],
+    "preToolUse": [
+      {
+        "type": "command",
+        "powershell": "pwsh -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .github/hooks/scripts/Test-LoopGuardrails.ps1",
+        "bash": "pwsh -NoProfile -NonInteractive -File .github/hooks/scripts/Test-LoopGuardrails.ps1",
+        "timeoutSec": 20
+      }
+    ],
+    "postToolUse": [
+      {
+        "type": "command",
+        "powershell": "pwsh -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .github/hooks/scripts/Write-HookEvent.ps1 -Evento postToolUse",
+        "bash": "pwsh -NoProfile -NonInteractive -File .github/hooks/scripts/Write-HookEvent.ps1 -Evento postToolUse",
+        "timeoutSec": 20
+      }
+    ],
+    "postToolUseFailure": [
+      {
+        "type": "command",
+        "powershell": "pwsh -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .github/hooks/scripts/Write-HookEvent.ps1 -Evento postToolUseFailure",
+        "bash": "pwsh -NoProfile -NonInteractive -File .github/hooks/scripts/Write-HookEvent.ps1 -Evento postToolUseFailure",
+        "timeoutSec": 20
+      }
+    ],
+    "subagentStart": [
+      {
+        "type": "command",
+        "powershell": "pwsh -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .github/hooks/scripts/Write-HookEvent.ps1 -Evento subagentStart",
+        "bash": "pwsh -NoProfile -NonInteractive -File .github/hooks/scripts/Write-HookEvent.ps1 -Evento subagentStart",
+        "timeoutSec": 20
+      }
+    ],
+    "subagentStop": [
+      {
+        "type": "command",
+        "powershell": "pwsh -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .github/hooks/scripts/Write-HookEvent.ps1 -Evento subagentStop",
+        "bash": "pwsh -NoProfile -NonInteractive -File .github/hooks/scripts/Write-HookEvent.ps1 -Evento subagentStop",
+        "timeoutSec": 20
+      }
+    ],
+    "sessionEnd": [
+      {
+        "type": "command",
+        "powershell": "pwsh -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .github/hooks/scripts/Write-HookEvent.ps1 -Evento sessionEnd",
+        "bash": "pwsh -NoProfile -NonInteractive -File .github/hooks/scripts/Write-HookEvent.ps1 -Evento sessionEnd",
+        "timeoutSec": 20
+      }
+    ]
+  }
+}

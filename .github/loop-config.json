@@ -1,0 +1,79 @@
+{
+  "versao": 1,
+  "limites": {
+    "max_iteracoes": 5,
+    "limiar_aderencia": 0.9,
+    "max_itens_por_plano": 15,
+    "delta_minimo": 0.02,
+    "iteracoes_estagnacao": 2,
+    "max_falhas_mesmo_criterio": 3,
+    "max_regressoes_consecutivas": 2
+  },
+  "autonomia": {
+    "continuar_automaticamente": true
+  },
+  "comandos_padrao": {
+    "restore": "",
+    "build": "",
+    "lint": "",
+    "test": "",
+    "coverage": "",
+    "static_analysis": "",
+    "dependency_audit": "",
+    "smoke": ""
+  },
+  "caminhos_protegidos": [
+    ".github/hooks/**",
+    ".github/loop-config.json",
+    ".github/skills/loop-protocol/scripts/**",
+    ".github/skills/dod-scoring/scripts/**",
+    "loops/.active",
+    "loops/*/loop-state.json",
+    "loops/*/log.jsonl",
+    "loops/*/00-spec-original.md"
+  ],
+  "caminhos_protegidos_apos_dod": [
+    "loops/*/01-spec-refinada.md",
+    "loops/*/02-definicao-de-pronto.md"
+  ],
+  "configuracoes_cobertura": [
+    "**/*.runsettings",
+    "**/Directory.Build.props",
+    "**/vitest.config.*",
+    "**/jest.config.*",
+    "**/.nycrc*",
+    "**/.c8rc*",
+    "**/.coveragerc",
+    "**/setup.cfg",
+    "**/pyproject.toml",
+    "**/jacoco*.xml"
+  ],
+  "comandos_bloqueados": [
+    "\\bgit\\s+push\\b",
+    "\\bgit\\s+reset\\s+--hard\\b",
+    "\\bgit\\s+clean\\s+-[a-zA-Z]*f",
+    "\\bgit\\s+checkout\\s+--\\s+\\.",
+    "\\s--force\\b",
+    "\\bformat\\s+[a-zA-Z]:",
+    "\\b(Stop-Computer|Restart-Computer|shutdown)\\b"
+  ],
+  "comandos_restritos": [
+    "\\bnpm\\s+(i|install)\\s+.*(-g|--global)\\b",
+    "\\bdotnet\\s+tool\\s+install\\s+.*(-g|--global)\\b",
+    "\\bsetx\\b",
+    "SetEnvironmentVariable",
+    "\\b(Invoke-WebRequest|Invoke-RestMethod|iwr|irm|curl|wget)\\b"
+  ],
+  "remocao_recursiva_permitida": [
+    "bin",
+    "obj",
+    "node_modules",
+    "TestResults",
+    "coverage",
+    "dist",
+    ".pytest_cache",
+    "__pycache__",
+    "tmp",
+    "temp"
+  ]
+}

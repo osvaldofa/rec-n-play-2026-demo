@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "loop-state.schema.json",
+  "title": "Estado de um loop de engenharia",
+  "type": "object",
+  "required": ["versao_protocolo", "loop_id", "status", "fase", "iteracao_atual", "limites", "comandos", "dod", "historico"],
+  "properties": {
+    "versao_protocolo": { "const": 1 },
+    "loop_id": { "type": "string", "pattern": "^loop-[a-z0-9-]+$" },
+    "status": { "enum": ["EM_ANDAMENTO", "DONE", "ESCALATED", "ABORTED"] },
+    "fase": { "enum": ["INTAKE", "REFINE", "GATE_DOD", "PLAN", "IMPLEMENT", "CHECK", "VERIFY", "DECIDE"] },
+    "iteracao_atual": { "type": "integer", "minimum": 0 },
+    "aguardando_humano": { "type": "boolean" },
+    "criado_em": { "type": "string" },
+    "atualizado_em": { "type": "string" },
+    "spec_origem": { "type": "string" },
+    "limites": {
+      "type": "object",
+      "required": ["max_iteracoes", "limiar_aderencia", "max_itens_por_plano", "delta_minimo", "iteracoes_estagnacao", "max_falhas_mesmo_criterio", "max_regressoes_consecutivas"],
+      "properties": {
+        "max_iteracoes": { "type": "integer", "minimum": 1 },
+        "limiar_aderencia": { "type": "number", "minimum": 0, "maximum": 1 },
+        "max_itens_por_plano": { "type": "integer", "minimum": 1 },
+        "delta_minimo": { "type": "number", "minimum": 0 },
+        "iteracoes_estagnacao": { "type": "integer", "minimum": 1 },
+        "max_falhas_mesmo_criterio": { "type": "integer", "minimum": 1 },
+        "max_regressoes_consecutivas": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "comandos": {
+      "type": "object",
+      "properties": {
+        "restore": { "type": "string" },
+        "build": { "type": "string" },
+        "lint": { "type": "string" },
+        "test": { "type": "string" },
+        "coverage": { "type": "string" },
+        "static_analysis": { "type": "string" },
+        "dependency_audit": { "type": "string" },
+        "smoke": { "type": "string" }
+      }
+    },
+    "dod": {
+      "type": "object",
+      "required": ["versao", "congelada"],
+      "properties": {
+        "versao": { "type": "integer", "minimum": 0 },
+        "congelada": { "type": "boolean" },
+        "aprovada_por": { "type": ["string", "null"] },
+        "aprovada_em": { "type": ["string", "null"] },
+        "hash_sha256": { "type": ["string", "null"] },
+        "hashes": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "escopo_escrita_atual": { "type": "array", "items": { "type": "string" } },
+    "historico": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["iteracao", "check", "indice", "gates_pendentes", "decisao"],
+        "properties": {
+          "iteracao": { "type": "integer", "minimum": 1 },
+          "check": { "enum": ["VERDE", "VERMELHO", "DESCONHECIDO"] },
+          "indice": { "type": "number", "minimum": 0, "maximum": 1 },
+          "gates_pendentes": { "type": "array", "items": { "type": "string" } },
+          "abaixo_de_um": { "type": "array", "items": { "type": "string" } },
+          "decisao": { "enum": ["CONTINUAR", "CONCLUIR", "ESCALAR"] },
+          "motivo": { "type": ["string", "null"] },
+          "alertas": { "type": "array", "items": { "type": "string" } },
+          "registrado_em": { "type": "string" }
+        }
+      }
+    },
+    "falhas_por_criterio": { "type": "object", "additionalProperties": { "type": "integer" } },
+    "ponto_retomada": { "type": "integer", "minimum": 0, "description": "Última iteração avaliada antes da retomada humana mais recente" },
+    "parada": {
+      "description": "Ponto exato da condição de parada vigente (null quando o loop não está parado)",
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "required": ["fase", "iteracao", "motivo"],
+          "properties": {
+            "fase": { "type": "string" },
+            "iteracao": { "type": "integer", "minimum": 0 },
+            "motivo": { "type": "string" },
+            "detalhe": { "type": "string" },
+            "agente": { "type": "string" },
+            "em": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "paradas": {
+      "type": "array",
+      "description": "Histórico de paradas e retomadas",
+      "items": {
+        "type": "object",
+        "properties": {
+          "fase": { "type": "string" },
+          "iteracao": { "type": "integer" },
+          "motivo": { "type": "string" },
+          "detalhe": { "type": "string" },
+          "retomado_por": { "type": "string" },
+          "orientacao": { "type": "string" },
+          "retomado_em": { "type": "string" }
+        }
+      }
+    },
+    "alertas": { "type": "array", "items": { "type": "string" } },
+    "loop_anterior": { "type": ["string", "null"], "description": "Loop substituído por este (nova versão do contrato, D-17)" },
+    "substituido_por": { "type": ["string", "null"], "description": "Loop que substituiu este (nova versão do contrato, D-17)" },
+    "motivo_encerramento": {
+      "enum": [null, "PRONTO", "LIMITE_ITERACOES", "ESTAGNACAO", "OSCILACAO", "REGRESSAO", "INTEGRIDADE_DOD", "IMPEDIMENTO", "FALHA_PROTOCOLO", "ORQUESTRADOR_INTERROMPIDO", "AMBIGUIDADE_REGRA", "CONTESTACAO_CRITERIO", "CONTESTACAO_TESTE", "ABORTADO_PELO_USUARIO"]
+    }
+  }
+}
